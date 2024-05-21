@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Visualizar Cachorros{% endblock %}
+
+{% block content %}
+<div class="mt-4">
+    <h1>Visualizar Cachorros</h1>
+    <form method="get" action="{{ url_for('view_dogs') }}" class="mb-4">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="genero">Gênero:</label>
+                <select name="genero" id="genero" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="Macho">Macho</option>
+                    <option value="Femea">Femea</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="porte">Porte:</label>
+                <select name="porte" id="porte" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="Pequeno">Pequeno</option>
+                    <option value="Médio">Médio</option>
+                    <option value="Grande">Grande</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="raca">Raça:</label>
+                <input type="text" name="raca" id="raca" class="form-control">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="local_resgate">Local de Resgate:</label>
+                <input type="text" name="local_resgate" id="local_resgate" class="form-control">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="cor">Cor:</label>
+                <input type="text" name="cor" id="cor" class="form-control">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="idade">Idade:</label>
+                <select name="idade" id="idade" class="form-control">
+                    <option value="">Todas</option>
+                    <option value="Filhote">Filhote</option>
+                    <option value="Adulto">Adulto</option>
+                    <option value="Idoso">Idoso</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="data_resgate">Data de Resgate:</label>
+                <input type="date" name="data_resgate" id="data_resgate" class="form-control">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="status_adocao">Status de Adoção:</label>
+                <select name="status_adocao" id="status_adocao" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="Disponível">Disponível</option>
+                    <option value="Em Lar temporario">Em Lar temporario</option>
+                    <option value="Dono encontrado">Dono encontrado</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+    </form>
+    <div class="row">
+        {% for dog in dogs %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="{{ url_for('static', filename='uploads/' ~ dog.imagem) }}" class="card-img-top" alt="Imagem do {{ dog.genero }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ dog.genero }}</h5>
+                        <p class="card-text"><strong>Porte:</strong> {{ dog.porte }}</p>
+                        <p class="card-text"><strong>Raça:</strong> {{ dog.raca }}</p>
+                        <p class="card-text"><strong>Características:</strong> {{ dog.caracteristicas }}</p>
+                        <p class="card-text"><strong>Local de Resgate:</strong> {{ dog.local_resgate }}</p>
+                        <p class="card-text"><strong>Abrigo Atual:</strong> {{ dog.abrigo_atual }}</p>
+                        <p class="card-text"><strong>Cor:</strong> {{ dog.cor }}</p>
+                        <p class="card-text"><strong>Idade:</strong> {{ dog.idade }}</p>
+                        <p class="card-text"><strong>Data de Resgate:</strong> {{ dog.data_resgate }}</p>
+                        <p class="card-text"><strong>Status de Adoção:</strong> {{ dog.status_adocao }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
