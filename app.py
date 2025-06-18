@@ -624,7 +624,7 @@ def main():
         st.session_state.custom_bet_id = None
     
     # Title
-    st.markdown('<div class="header"><h1 style="color: white;"> GuimaBet</h1><p>Apostas no Futebol do Recreio do CIB</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="header"><h1 style="color: white;"> Mbet</h1><p>Apostas no Terrara</p></div>', unsafe_allow_html=True)
     
     # If not logged in, show login/register page
     if not st.session_state.logged_in:
