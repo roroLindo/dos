@@ -529,7 +529,7 @@ def delete_user(username):
 # Page setup
 def main():
     st.set_page_config(
-        page_title="GuimaBet",
+        page_title="Mbet",
         page_icon="",
         layout="wide",
         initial_sidebar_state="expanded"
