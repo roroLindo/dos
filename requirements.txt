@@ -1,0 +1,6 @@
+streamlit
+pandas
+requests
+json
+sqlite3
+hashlib
