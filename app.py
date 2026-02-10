@@ -194,6 +194,32 @@ def get_match_history():
     conn.close()
     return matches
 
+# Build a surprise pick for the home page
+def build_surprise_pick(upcoming_matches):
+    match = random.choice(upcoming_matches)
+    team1 = get_team_name(match['team1_id'])
+    team2 = get_team_name(match['team2_id'])
+    picks = [
+        ("Vitória do " + team1, match.get('team1_win')),
+        ("Empate", match.get('draw')),
+        ("Vitória do " + team2, match.get('team2_win')),
+    ]
+    pick_label, odds = random.choice(picks)
+    if odds is None:
+        odds = "N/A"
+    message_bank = [
+        "Confie no seu instinto e deixe a torcida fazer o resto!",
+        "Um palpite ousado para quem gosta de emoção.",
+        "Dica quente para acender o placar e seus pontos.",
+        "Quem arrisca pode brilhar: essa é a vibe do dia!",
+    ]
+    return {
+        "match": f"{team1} vs {team2}",
+        "pick": pick_label,
+        "odds": odds,
+        "message": random.choice(message_bank),
+    }
+
 # Get custom bets for a match
 def get_custom_bets(match_id=None):
     conn = sqlite3.connect('guimabet.db')
@@ -604,6 +630,28 @@ def main():
         border-radius: 10px;
         margin-bottom: 20px;
     }
+    .surprise-card {
+        background: linear-gradient(135deg, #1f4037, #99f2c8);
+        color: #0e1b17;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+    .surprise-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    .surprise-pill {
+        display: inline-block;
+        background: rgba(0, 0, 0, 0.25);
+        color: #ffffff;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        margin-right: 6px;
+    }
     </style>
     """, unsafe_allow_html=True)
     
@@ -622,6 +670,8 @@ def main():
         st.session_state.bet_type = None
     if 'custom_bet_id' not in st.session_state:
         st.session_state.custom_bet_id = None
+    if 'surprise_pick' not in st.session_state:
+        st.session_state.surprise_pick = None
     
     # Title
     st.markdown('<div class="header"><h1 style="color: white;"> Mbet</h1><p>Apostas no Terrara</p></div>', unsafe_allow_html=True)
@@ -724,6 +774,34 @@ def home_page():
     st.subheader("Jogos Disponíveis para Apostas")
     
     upcoming_matches = get_upcoming_matches()
+
+    if upcoming_matches:
+        if st.session_state.surprise_pick is None:
+            st.session_state.surprise_pick = build_surprise_pick(upcoming_matches)
+
+        with st.container():
+            st.markdown(
+                f"""
+                <div class="surprise-card">
+                    <div class="surprise-title">🎉 Surpresa do Dia</div>
+                    <div>
+                        <span class="surprise-pill">Palpite relâmpago</span>
+                        <span class="surprise-pill">Odds quentinhas</span>
+                    </div>
+                    <p style="margin-top: 12px; font-size: 16px;">
+                        <strong>{st.session_state.surprise_pick['match']}</strong><br/>
+                        {st.session_state.surprise_pick['pick']} • Odds {st.session_state.surprise_pick['odds']}
+                    </p>
+                    <p style="margin: 0; font-size: 14px;">{st.session_state.surprise_pick['message']}</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            if st.button("🎲 Nova surpresa", key="refresh_surprise"):
+                st.session_state.surprise_pick = build_surprise_pick(upcoming_matches)
+                st.experimental_rerun()
+    else:
+        st.session_state.surprise_pick = None
     
     if not upcoming_matches:
         st.info("Não há jogos programados no momento.")
